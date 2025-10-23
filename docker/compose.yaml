@@ -1,0 +1,30 @@
+
+services:
+  etl:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: etl_app
+    depends_on:
+      - db
+    env_file:
+      - ../.env
+    command: ["python", "main.py"]
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:15
+    container_name: etl_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: etl_demo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123123
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
